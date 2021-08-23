@@ -25,6 +25,8 @@ start.addEventListener('click', (e) => {
                         break;    
         case 'selection':  selectionSort(box1);
                         break;
+        case 'merge':  mergeSort(box1.getElementsByClassName('box'), 0, input-1);
+                        break;
             
     }
     switch(option2){
@@ -33,6 +35,8 @@ start.addEventListener('click', (e) => {
         case 'insertion' : insertionSort(box2);
                         break;
         case 'selection' :  selectionSort(box2);
+                        break;
+        case 'merge' :  mergeSort(box2.getElementsByClassName('box'), 0, input-1);
                         break;
     }
 })
@@ -54,7 +58,7 @@ function createBox(input){
     }  
     box2.innerHTML = box1.innerHTML;
 }
-
+// Bubble Sort
 async function bubbleSort(someBox){
     stopAllThis();
     let box = someBox.getElementsByClassName('box');
@@ -77,7 +81,7 @@ async function bubbleSort(someBox){
                     await waitForMe(0);
                     box[j].style.backgroundColor = 'black';
                     box[j+1].style.backgroundColor = 'black'; 
-            }
+                }
         }
     }
     catch(e){
@@ -87,7 +91,7 @@ async function bubbleSort(someBox){
         startAllThis();
     }
 }
-
+// Insertion Sort
 async function insertionSort(gimmeBox){
     stopAllThis();
     let box = gimmeBox.getElementsByClassName('box');
@@ -118,7 +122,7 @@ async function insertionSort(gimmeBox){
         startAllThis();
     }
 }
-
+// Selection Sort
 async function selectionSort(changethisBox){
     stopAllThis();
     let box = changethisBox.getElementsByClassName('box');
@@ -149,6 +153,51 @@ async function selectionSort(changethisBox){
     }
     finally{
         startAllThis();
+    }
+}
+// Merge Sort
+async function mergeSort(arrayBox, l, r){
+    if(l < r){
+        stopAllThis();
+        let m = Math.floor(l + (r-l)/2);
+        await mergeSort(arrayBox, l, m);
+        await mergeSort(arrayBox, m+1, r);
+        await merge(arrayBox, l, m, r);
+    }
+}
+async function merge(arrayBox, l, m , r){
+    
+    let len1 = m-l +1;
+    let len2 = r - m;
+
+    let arr1 = [];
+    let arr2 = [];
+
+    for(let i = 0 ; i < len1 ; i++){
+        arr1[i] =  arrayBox[l+i].style.height;
+    }
+    for(let j = 0 ; j < len2 ; j++){
+        arr2[j] = arrayBox[m+1+j].style.height;
+    }
+    let i = 0, j = 0, k = l; 
+    while(i < len1 && j < len2){
+        arrayBox[k].style.backgroundColor = 'red';
+        if(parseFloat(arr1[i]) <= parseFloat(arr2[j]))
+        {
+            arrayBox[k].style.height = arr1[i++];
+        }
+        else{
+            arrayBox[k].style.height = arr2[j++];
+        }
+        await waitForMe(0);
+        arrayBox[k].style.backgroundColor = 'black'
+        k++;
+    }
+    while(i < len1){
+        arrayBox[k++].style.height = arr1[i++];
+    }
+    while(j < len2){
+        arrayBox[k++].style.height = arr2[j++];
     }
 }
 
